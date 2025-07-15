@@ -128,6 +128,16 @@ export default function App() {
       
       if (authMode === 'signup') {
         setAuthError('Account created successfully! Please check your email for verification.')
+      } else {
+        // For signin, update the user state directly
+        if (data.user) {
+          setUser(data.user)
+          // Set welcome message for successful login
+          setMessages([{
+            role: 'assistant',
+            content: `Welcome, ${data.user.email}! I'm Syntherion AI, your intelligent assistant. How can I help you today?`
+          }])
+        }
       }
     } catch (error) {
       setAuthError(error.message)
