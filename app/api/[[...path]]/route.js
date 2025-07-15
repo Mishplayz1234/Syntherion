@@ -175,10 +175,20 @@ export async function POST(request) {
           updated_at: new Date().toISOString(),
         }
         
-        return handleCORS(NextResponse.json({ 
+        // Set test user cookie
+        const response = NextResponse.json({ 
           message: 'Signed in successfully (test mode)', 
           user: mockUser 
-        }))
+        })
+        
+        response.cookies.set('test-user', 'test-user-123', {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'strict',
+          maxAge: 60 * 60 * 24 * 7 // 7 days
+        })
+        
+        return handleCORS(response)
       }
       
       const supabase = createSupabaseServer()
