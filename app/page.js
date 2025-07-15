@@ -149,6 +149,7 @@ export default function App() {
   const handleSignOut = async () => {
     try {
       await fetch('/api/auth/signout', { method: 'POST' })
+      setUser(null)
       setMessages([])
       setSessionId(crypto.randomUUID())
     } catch (error) {
