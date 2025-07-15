@@ -147,6 +147,26 @@ export async function POST(request) {
 
     if (path === 'auth/signin') {
       const { email, password } = body
+      
+      // Bypass authentication for test credentials
+      if (email === '123@test.com' && password === '123@test.com') {
+        // Create a mock user session for testing
+        const mockUser = {
+          id: 'test-user-123',
+          email: '123@test.com',
+          email_confirmed_at: new Date().toISOString(),
+          user_metadata: {},
+          app_metadata: {},
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }
+        
+        return handleCORS(NextResponse.json({ 
+          message: 'Signed in successfully (test mode)', 
+          user: mockUser 
+        }))
+      }
+      
       const supabase = createSupabaseServer()
       
       const { data, error } = await supabase.auth.signInWithPassword({
