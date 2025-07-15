@@ -182,9 +182,10 @@ export async function POST(request) {
         })
         
         response.cookies.set('test-user', 'test-user-123', {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
+          httpOnly: false,  // Allow client-side access for testing
+          secure: false,    // Allow non-HTTPS for development
+          sameSite: 'lax',  // More permissive for testing
+          path: '/',
           maxAge: 60 * 60 * 24 * 7 // 7 days
         })
         
