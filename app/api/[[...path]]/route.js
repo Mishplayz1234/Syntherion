@@ -208,6 +208,14 @@ export async function POST(request) {
     if (path === 'auth/signout') {
       const supabase = createSupabaseServer()
       
+      // Check if this is a test user
+      const testUserCookie = cookies().get('test-user')
+      if (testUserCookie && testUserCookie.value === 'test-user-123') {
+        const response = NextResponse.json({ message: 'Signed out successfully (test mode)' })
+        response.cookies.delete('test-user')
+        return handleCORS(response)
+      }
+      
       const { error } = await supabase.auth.signOut()
 
       if (error) {
