@@ -47,9 +47,25 @@ export default function App() {
   // Check authentication status
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setUser(session?.user || null)
-      setLoading(false)
+      try {
+        // First check if there's a session via our API
+        const response = await fetch('/api/auth/user')
+        if (response.ok) {
+          const data = await response.json()
+          setUser(data.user)
+          setLoading(false)
+          return
+        }
+        
+        // Fallback to Supabase session check
+        const { data: { session } } = await supabase.auth.getSession()
+        setUser(session?.user || null)
+        setLoading(false)
+      } catch (error) {
+        console.error('Auth check error:', error)
+        setUser(null)
+        setLoading(false)
+      }
     }
     
     checkAuth()
